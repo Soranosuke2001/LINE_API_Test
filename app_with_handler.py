@@ -57,6 +57,27 @@ configuration = Configuration(
 )
 
 
+@app.route("/", methods=["POST"])
+def home():
+    # get X-Line-Signature header value
+    # signature = request.headers['X-Line-Signature']
+
+    print(request.headers)
+
+    # get request body as text
+    # body = request.get_data(as_text=True)
+    # print("Request body: " + body)
+
+    return 'OK', 200
+    # # handle webhook body
+    # try:
+    #     handler.handle(body, signature)
+    # except InvalidSignatureError:
+    #     abort(400)
+
+    # return 'OK'
+
+
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
