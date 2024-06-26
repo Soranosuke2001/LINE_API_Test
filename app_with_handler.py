@@ -60,28 +60,9 @@ configuration = Configuration(
 @app.route("/", methods=["POST"])
 def home():
     # get X-Line-Signature header value
-    # signature = request.headers['X-Line-Signature']
+    signature = request.headers['X-Line-Signature']
 
     print(request.headers)
-
-    # get request body as text
-    # body = request.get_data(as_text=True)
-    # print("Request body: " + body)
-
-    return 'OK', 200
-    # # handle webhook body
-    # try:
-    #     handler.handle(body, signature)
-    # except InvalidSignatureError:
-    #     abort(400)
-
-    # return 'OK'
-
-
-@app.route("/callback", methods=['POST'])
-def callback():
-    # get X-Line-Signature header value
-    signature = request.headers['X-Line-Signature']
 
     # get request body as text
     body = request.get_data(as_text=True)
@@ -91,9 +72,8 @@ def callback():
     try:
         handler.handle(body, signature)
     except InvalidSignatureError:
-        abort(400)
-
-    return 'OK'
+        print("The signature is not valid")
+    return 'OK', 200
 
 
 @handler.add(MessageEvent, message=TextMessageContent)
@@ -116,9 +96,6 @@ if __name__ == "__main__":
     arg_parser.add_argument('-d', '--debug', default=False, help='debug')
     options = arg_parser.parse_args()
 
-    print("Server started successfully")
-    print(f"CAT: {channel_access_token}")
-    print(f"CS: {channel_secret}")
-    print("")
+    app.logger.info("Successfully Started Server")
 
     app.run(debug=options.debug, port=options.port, host='0.0.0.0')
