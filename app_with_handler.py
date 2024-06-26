@@ -14,6 +14,7 @@
 
 import os
 import sys
+import logging
 from argparse import ArgumentParser
 
 from dotenv import load_dotenv
@@ -39,6 +40,7 @@ from linebot.v3.messaging import (
 
 load_dotenv()
 app = Flask(__name__)
+app.logger.setLevel(logging.INFO)
 
 # get channel_secret and channel_access_token from your environment variable
 channel_secret = os.getenv('LINE_CHANNEL_SECRET', None)
@@ -73,6 +75,16 @@ def home():
         handler.handle(body, signature)
     except InvalidSignatureError:
         print("The signature is not valid")
+    return 'OK', 200
+
+
+@app.route("/test", methods=["GET", "POST"])
+def test_message():
+    app.logger.info("Testing the info logger")
+    app.logger.warning("Testing the warning logger")
+    app.logger.debug("Testing the debug logger")
+    app.logger.error("Testing the error logger")
+
     return 'OK', 200
 
 
