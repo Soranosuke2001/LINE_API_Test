@@ -98,4 +98,5 @@ if __name__ == "__main__":
 
     app.logger.info("Successfully Started Server")
 
-    app.run(debug=options.debug, port=options.port, host='0.0.0.0')
+    # app.run(debug=options.debug, port=options.port, host='0.0.0.0')
+    app.run(debug=True, port=options.port, host='0.0.0.0')
