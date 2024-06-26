@@ -100,4 +100,4 @@ if __name__ == "__main__":
     print(f"CS: {channel_secret}")
     print("")
 
-    app.run(debug=options.debug, port=options.port)
+    app.run(debug=options.debug, port=options.port, host='0.0.0.0')
