@@ -5,7 +5,7 @@ from botocore.exceptions import NoCredentialsError
 
 def upload_to_s3(s3, body, bucket_name, object_name):
     try:
-        s3.upload_file(Bucket=bucket_name, Key=object_name, Body=body)
+        s3.put_object(Bucket=bucket_name, Key=object_name, Body=body)
         print(f"{object_name} has been uploaded to {bucket_name}")
         return True
     except FileNotFoundError:
