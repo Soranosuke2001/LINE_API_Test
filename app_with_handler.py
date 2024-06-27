@@ -144,6 +144,10 @@ def message_image(event: MessageEvent):
 
     response = requests.get(url, headers=headers)
 
+    print("LINE data API received")
+    print(response)
+    print()
+
     if response.status_code == 200:
         try:
             aws_s3.upload_to_s3(s3, response.content, BUCKET_NAME, "testing")
