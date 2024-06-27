@@ -1,7 +1,7 @@
 from botocore.exceptions import NoCredentialsError
 
 # Specify the bucket name
-bucket_name = 'your-bucket-name'
+# bucket_name = 'your-bucket-name'
 
 def upload_to_s3(s3, file_name, bucket, object_name=None):
     """Upload a file to an S3 bucket
@@ -40,10 +40,10 @@ def download_from_s3(s3, bucket, object_name, file_name):
     except NoCredentialsError:
         print("Credentials not available")
 
-s3 = "boto3.client()"
+# s3 = "boto3.client()"
 
 # Upload a file
-upload_to_s3(s3, 'test.txt', bucket_name)
+# upload_to_s3(s3, 'test.txt', bucket_name)
 
 # Download a file
-download_from_s3(s3, bucket_name, 'test.txt', 'downloaded_test.txt')
+# download_from_s3(s3, bucket_name, 'test.txt', 'downloaded_test.txt')
