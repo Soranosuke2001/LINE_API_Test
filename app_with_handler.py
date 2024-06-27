@@ -151,6 +151,8 @@ def message_image(event: MessageEvent):
     else:
         print("Unable to fetch the data from LINE API")
 
+    return 'OK', 200
+
 
 if __name__ == "__main__":
     arg_parser = ArgumentParser(
