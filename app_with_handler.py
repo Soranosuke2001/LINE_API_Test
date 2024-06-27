@@ -41,6 +41,8 @@ from linebot.v3.messaging import (
     TextMessage
 )
 
+from linebot.v3.utils import PY3
+
 # AWS API imports
 import boto3
 from botocore.exceptions import NoCredentialsError
@@ -151,7 +153,14 @@ def message_image(event: MessageEvent):
     else:
         print("Unable to fetch the data from LINE API")
 
-    return 'OK', 200
+    return create_body('OK')
+
+
+def create_body(text):
+    if PY3:
+        return [bytes(text, 'utf-8')]
+    else:
+        return text
 
 
 if __name__ == "__main__":
