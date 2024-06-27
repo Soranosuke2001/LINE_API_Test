@@ -15,6 +15,7 @@
 import os
 import sys
 import logging
+import requests
 
 from argparse import ArgumentParser
 from flask import Flask, request, abort
@@ -42,6 +43,7 @@ from linebot.v3.messaging import (
 
 # AWS API imports
 import boto3
+from botocore.exceptions import NoCredentialsError
 
 # Local imports
 import aws_s3
@@ -132,6 +134,22 @@ def message_image(event: MessageEvent):
 
     message_id = parsed_event.get('message').get('id')
     print(message_id)
+
+    url = f'https://api-data.line.me/v2/bot/message/{message_id}/content'
+    headers = {
+    'Authorization': f'Bearer {CHANNEL_ACCESS_TOKEN}'
+    }
+
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        try:
+            aws_s3.upload_to_s3(s3, response.content, BUCKET_NAME, "testing")
+            print("The image was uploaded successfully")
+        except NoCredentialsError:
+            print("Error Uploading to S3")
+    else:
+        print("Unable to fetch the data from LINE API")
 
 
 if __name__ == "__main__":
