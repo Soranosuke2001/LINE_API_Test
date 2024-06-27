@@ -4,6 +4,7 @@ from botocore.exceptions import NoCredentialsError
 # bucket_name = 'your-bucket-name'
 
 def upload_to_s3(s3, body, bucket_name, object_name):
+    print("Uploading to S3...")
     try:
         s3.put_object(Bucket=bucket_name, Key=object_name, Body=body)
         print(f"{object_name} has been uploaded to {bucket_name}")
