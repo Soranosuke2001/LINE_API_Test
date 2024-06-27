@@ -125,8 +125,13 @@ def message_text(event: MessageEvent):
     #     )
 
 @handler.add(MessageEvent, message=ImageMessageContent)
-def message_image(event):
-    print(event)
+def message_image(event: MessageEvent):
+    parsed_event = event.to_dict()
+    print(parsed_event)
+    print()
+
+    message_id = parsed_event.get('message').get('id')
+    print(message_id)
 
 
 if __name__ == "__main__":
