@@ -131,6 +131,7 @@ def message_text(event: MessageEvent):
     #         )
     #     )
 
+
 @handler.add(MessageEvent, message=ImageMessageContent)
 def message_image(event: MessageEvent):
     parsed_event = event.to_dict()
@@ -147,10 +148,6 @@ def message_image(event: MessageEvent):
 
     response = requests.get(url, headers=headers)
 
-    print("LINE data API received")
-    print(response)
-    print()
-
     if response.status_code == 200:
         try:
             image = Image.open(BytesIO(response.content))
@@ -159,7 +156,6 @@ def message_image(event: MessageEvent):
             image.save(image_bytes, format="JPEG")
             image_bytes.seek(0)
 
-            print('image conversion complete')
             aws_s3.upload_to_s3(s3, image_bytes, BUCKET_NAME, "testing")
             print("The image was uploaded successfully")
         except NoCredentialsError:
@@ -167,7 +163,6 @@ def message_image(event: MessageEvent):
     else:
         print("Unable to fetch the data from LINE API")
 
-    print("finishing")
     return create_body('OK')
 
 
