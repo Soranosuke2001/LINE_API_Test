@@ -15,11 +15,12 @@
 import os
 import sys
 import logging
-from argparse import ArgumentParser
 
+from argparse import ArgumentParser
+from flask import Flask, request, abort
 from dotenv import load_dotenv
 
-from flask import Flask, request, abort
+# LINE API imports
 from linebot.v3 import (
      WebhookHandler
 )
@@ -29,6 +30,7 @@ from linebot.v3.exceptions import (
 from linebot.v3.webhooks import (
     MessageEvent,
     TextMessageContent,
+    ImageMessageContent
 )
 from linebot.v3.messaging import (
     Configuration,
@@ -38,25 +40,49 @@ from linebot.v3.messaging import (
     TextMessage
 )
 
+# AWS API imports
+import boto3
+
+# Local imports
+from .aws_s3 import upload_to_s3, download_from_s3
+
 load_dotenv()
 app = Flask(__name__)
 app.logger.setLevel(logging.INFO)
 
-# get channel_secret and channel_access_token from your environment variable
-channel_secret = os.getenv('LINE_CHANNEL_SECRET', None)
-channel_access_token = os.getenv('LINE_CHANNEL_ACCESS_TOKEN', None)
-if channel_secret is None:
+# LINE API Access Tokens
+CHANNEL_SECRET = os.getenv('LINE_CHANNEL_SECRET', None)
+CHANNEL_ACCESS_TOKEN = os.getenv('LINE_CHANNEL_ACCESS_TOKEN', None)
+
+if CHANNEL_SECRET is None:
     print('Specify LINE_CHANNEL_SECRET as environment variable.')
     sys.exit(1)
-if channel_access_token is None:
+if CHANNEL_ACCESS_TOKEN is None:
     print('Specify LINE_CHANNEL_ACCESS_TOKEN as environment variable.')
     sys.exit(1)
 
-handler = WebhookHandler(channel_secret)
+handler = WebhookHandler(CHANNEL_SECRET)
 
 configuration = Configuration(
-    access_token=channel_access_token
+    access_token=CHANNEL_ACCESS_TOKEN
 )
+
+# AWS API Access Tokens
+AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY", None)
+AWS_SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", None)
+BUCKET_NAME = os.getenv("BUCKET_NAME", None)
+
+if AWS_ACCESS_KEY is None:
+    print('Specify AWS_ACCESS_KEY as environment variable.')
+    sys.exit(1)
+if AWS_SECRET_KEY is None:
+    print('Specify AWS_SECRET_ACCESS_KEY as environment variable.')
+    sys.exit(1)
+if BUCKET_NAME is None:
+    print('Specify BUCKET_NAME as environment variable.')
+    sys.exit(1)
+
+s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
 
 
 @app.route("/", methods=["POST"])
@@ -64,11 +90,8 @@ def home():
     # get X-Line-Signature header value
     signature = request.headers['X-Line-Signature']
 
-    print(request.headers)
-
     # get request body as text
     body = request.get_data(as_text=True)
-    print("Request body: " + body)
 
     # handle webhook body
     try:
@@ -89,16 +112,21 @@ def test_message():
     return 'OK', 200
 
 
-# @handler.add(MessageEvent, message=TextMessageContent)
-# def message_text(event):
-#     with ApiClient(configuration) as api_client:
-#         line_bot_api = MessagingApi(api_client)
-#         line_bot_api.reply_message_with_http_info(
-#             ReplyMessageRequest(
-#                 reply_token=event.reply_token,
-#                 messages=[TextMessage(text=event.message.text)]
-#             )
-#         )
+@handler.add(MessageEvent, message=TextMessageContent)
+def message_text(event):
+    print(event)
+    # with ApiClient(configuration) as api_client:
+    #     line_bot_api = MessagingApi(api_client)
+    #     line_bot_api.reply_message_with_http_info(
+    #         ReplyMessageRequest(
+    #             reply_token=event.reply_token,
+    #             messages=[TextMessage(text=event.message.text)]
+    #         )
+    #     )
+
+@handler.add(MessageEvent, message=ImageMessageContent)
+def message_image(event):
+    print(event)
 
 
 if __name__ == "__main__":
