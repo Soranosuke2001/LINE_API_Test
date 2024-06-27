@@ -44,7 +44,7 @@ from linebot.v3.messaging import (
 import boto3
 
 # Local imports
-from .aws_s3 import upload_to_s3, download_from_s3
+from . import aws_s3
 
 load_dotenv()
 app = Flask(__name__)
