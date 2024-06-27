@@ -113,8 +113,8 @@ def test_message():
 
 
 @handler.add(MessageEvent, message=TextMessageContent)
-def message_text(event):
-    print(event)
+def message_text(event: MessageEvent):
+    print(event.to_dict())
     # with ApiClient(configuration) as api_client:
     #     line_bot_api = MessagingApi(api_client)
     #     line_bot_api.reply_message_with_http_info(
