@@ -17,9 +17,12 @@ import sys
 import logging
 import requests
 
-from argparse import ArgumentParser
-from flask import Flask, request, abort
 from dotenv import load_dotenv
+from argparse import ArgumentParser
+
+from flask import Flask, request, abort
+from PIL import Image
+from io import BytesIO
 
 # LINE API imports
 from linebot.v3 import (
@@ -150,13 +153,21 @@ def message_image(event: MessageEvent):
 
     if response.status_code == 200:
         try:
-            aws_s3.upload_to_s3(s3, response.content, BUCKET_NAME, "testing")
+            image = Image.open(BytesIO(response.content))
+            image_bytes = BytesIO()
+
+            image.save(image_bytes, format="JPEG")
+            image_bytes.seek(0)
+
+            print('image conversion complete')
+            aws_s3.upload_to_s3(s3, image_bytes, BUCKET_NAME, "testing")
             print("The image was uploaded successfully")
         except NoCredentialsError:
             print("Error Uploading to S3")
     else:
         print("Unable to fetch the data from LINE API")
 
+    print("finishing")
     return create_body('OK')
 
 
