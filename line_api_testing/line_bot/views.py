@@ -28,7 +28,13 @@ class WebhookEvent(APIView):
     if not verified:
       return Response(status=status.HTTP_401_UNAUTHORIZED)
     
-    print("Testing Environment")
+    data = request.data
+    print()
+    print("*"*50)
+    print(data)
+    print(type(data))
+    print("*"*50)
+    print()
 
     return Response(status=status.HTTP_200_OK)
   

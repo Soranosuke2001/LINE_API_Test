@@ -17,4 +17,6 @@ def verify_signature(request, handler):
     return False
     
 
-  
+# Check the event type
+def check_event():
+  pass
