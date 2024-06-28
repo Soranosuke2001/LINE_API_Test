@@ -1,17 +1,8 @@
-import os
-
-from rest_framework.request import Request
-
-from linebot.v3 import WebhookHandler
 from linebot.v3.exceptions import InvalidSignatureError
-
-CHANNEL_SECRET = os.getenv('LINE_CHANNEL_SECRET', None)
-
-handler = WebhookHandler(CHANNEL_SECRET)
 
 
 # Verify the Signature
-def verify_signature(request: Request):
+def verify_signature(request, handler):
   if not request:
     return False
 

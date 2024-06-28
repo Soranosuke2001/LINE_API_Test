@@ -5,5 +5,5 @@ from . import views
 app_name = "line_bot"
 
 urlpatterns = [
-  path("", views.SaveLineImage.as_view(), name="image"),
+  path("", views.WebhookEvent.as_view(), name="webhook-handler"),
 ]
