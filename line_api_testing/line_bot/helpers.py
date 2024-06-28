@@ -33,7 +33,8 @@ def check_event(request, event):
   print()
   
   response = requests.post(url, data=event)
-  print("Failed to send the post request")
+  print(f"Response: {response}")
+  print()
 
   if response.status_code == 200:
     return "Complete"
