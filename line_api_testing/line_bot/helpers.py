@@ -28,13 +28,15 @@ def check_event(request, event):
   if not event['type'] == 'message':
     return None
   
-  target = request.build_absolute_uri(ROUTES[event['message']['type']])
+  url = request.build_absolute_uri(ROUTES[event['message']['type']])
+  print(f'sending post request to: {url}')
+  print()
   
-  response = requests.post(target, data=event)
+  response = requests.post(url, data=event)
+  print("Failed to send the post request")
 
   if response.status_code == 200:
     return "Complete"
   else:
     return "Incomplete"
 
-    

@@ -47,6 +47,8 @@ class LineImageEvent(APIView):
   def post(self, request, format=None):
     data = request.data
     print("This is the LINE IMAGE EVENT")
+    print(data)
+    print()
 
     return Response(status=status.HTTP_200_OK)
 
