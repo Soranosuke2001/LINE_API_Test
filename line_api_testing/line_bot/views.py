@@ -32,11 +32,21 @@ class WebhookEvent(APIView):
     events = data['events']
 
     for event in events:
-      helpers.check_event(event)
+      response = helpers.check_event(request, event)
+
+      if not response:
+        return Response(status=status.HTTP_403_FORBIDDEN)
+      
+      if response == "Incomplete":
+        return Response(status=status.HTTP_400_BAD_REQUEST)
       
     return Response(status=status.HTTP_200_OK)
   
 
 class LineImageEvent(APIView):
   def post(self, request, format=None):
-    pass
+    data = request.data
+    print("This is the LINE IMAGE EVENT")
+
+    return Response(status=status.HTTP_200_OK)
+

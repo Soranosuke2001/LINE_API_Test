@@ -1,4 +1,10 @@
+import requests
+
+from django.shortcuts import redirect
+
 from linebot.v3.exceptions import InvalidSignatureError
+
+from .constants import ROUTES
 
 
 # Verify the Signature
@@ -18,9 +24,17 @@ def verify_signature(request, handler):
     
 
 # Check the event type
-def check_event(event):
-  if event['type'] == 'message' and event['message']['type'] == 'text':
-    print('text received')
+def check_event(request, event):
+  if not event['type'] == 'message':
+    return None
+  
+  target = request.build_absolute_uri(ROUTES[event['message']['type']])
+  
+  response = requests.post(target, data=event)
+
+  if response.status_code == 200:
+    return "Complete"
   else:
-    print(f'Message type received was {event['message']['type']}')
-  print()
+    return "Incomplete"
+
+    
