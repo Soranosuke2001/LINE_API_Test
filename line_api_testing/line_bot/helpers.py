@@ -6,7 +6,7 @@ def verify_signature(request):
     return False
 
   signature = request.headers['X-Line-Signature']
-  body = request.get_data(as_text=True)
+  body = request.data
 
   print(signature)
   print(body)
