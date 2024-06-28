@@ -26,7 +26,10 @@ SECRET_KEY = "django-insecure-&*lj4t-ao44lq&x&7*3_7=ro2qwt-c#%q7u-35e1ndn2*y%$hl
 DEBUG = True
 
 ALLOWED_HOSTS = [
-  "gitlabce-acit4850-group21-uswest1-google-cloud.com"
+  "gitlabce-acit4850-group21-uswest1-google-cloud.com",
+  "3.113.13.92",
+  "localhost",
+  "127.0.0.1",
 ]
 
 
