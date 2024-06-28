@@ -18,5 +18,9 @@ def verify_signature(request, handler):
     
 
 # Check the event type
-def check_event():
-  pass
+def check_event(event):
+  if event['type'] == 'message' and event['message']['type'] == 'text':
+    print('text received')
+  else:
+    print(f'Message type received was {event['message']['type']}')
+  print()

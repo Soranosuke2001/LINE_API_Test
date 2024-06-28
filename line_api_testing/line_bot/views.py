@@ -29,13 +29,11 @@ class WebhookEvent(APIView):
       return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     data = request.data
-    print()
-    print("*"*50)
-    print(data)
-    print(type(data))
-    print("*"*50)
-    print()
+    events = data['events']
 
+    for event in events:
+      helpers.check_event(event)
+      
     return Response(status=status.HTTP_200_OK)
   
 
