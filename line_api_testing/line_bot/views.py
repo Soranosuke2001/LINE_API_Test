@@ -14,6 +14,8 @@ class SaveLineImage(APIView):
 
     if not verified:
       return Response(status=status.HTTP_401_UNAUTHORIZED)
+    
+    print("Valid signature")
 
     return Response(status=status.HTTP_200_OK)
 
