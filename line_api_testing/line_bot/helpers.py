@@ -7,7 +7,7 @@ from linebot.v3.exceptions import InvalidSignatureError
 
 CHANNEL_SECRET = os.getenv('LINE_CHANNEL_SECRET', None)
 
-handler = WebhookHandler()
+handler = WebhookHandler(CHANNEL_SECRET)
 
 
 # Verify the Signature
