@@ -5,5 +5,5 @@ import views
 app_name = "line_bot"
 
 urlpatterns = [
-  path("line/image/", views, name="image"),
+  path("", views.SaveLineImage.as_view(), name="image"),
 ]
