@@ -29,7 +29,7 @@ def check_event(request, event):
     return None
   
   # url = request.build_absolute_uri(ROUTES[event['message']['type']])
-  url = f'localhost:8000/{ROUTES[event['message']['type']]}'
+  url = f'127.0.0.1:8000/{ROUTES[event['message']['type']]}'
   print(f'sending post request to: {url}')
   print()
   
