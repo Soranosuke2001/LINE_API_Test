@@ -28,7 +28,8 @@ def check_event(request, event):
   if not event['type'] == 'message':
     return None
   
-  url = request.build_absolute_uri(ROUTES[event['message']['type']])
+  # url = request.build_absolute_uri(ROUTES[event['message']['type']])
+  url = f'localhost:8000/{ROUTES[event['message']['type']]}'
   print(f'sending post request to: {url}')
   print()
   
