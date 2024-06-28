@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 # Create your views here.
 class SaveLineImage(APIView):
   def post(self, request, format=None):
-    print(request)
+    print(request.data)
 
     return Response(status=status.HTTP_200_OK)
 
