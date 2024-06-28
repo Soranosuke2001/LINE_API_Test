@@ -1,6 +1,6 @@
 ROUTES = {
-  "image": "/image/",
-  "video": "/video/",
-  "file": "/file/",
-  "audio": "/audio/",
+  "image": "image/",
+  "video": "video/",
+  "file": "file/",
+  "audio": "audio/",
 }
