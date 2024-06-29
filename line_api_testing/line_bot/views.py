@@ -12,9 +12,6 @@ from rest_framework.views import APIView
 
 from linebot.v3 import WebhookHandler
 
-import boto3
-from botocore.exceptions import NoCredentialsError
-
 from . import helpers
 from .serializers import (
   LineImageSerializer
@@ -26,7 +23,6 @@ from .models import (
 CHANNEL_SECRET = os.getenv('LINE_CHANNEL_SECRET', None)
 
 handler = WebhookHandler(CHANNEL_SECRET)
-S3 = boto3.client('s3')
 
 
 # Create your views here.
@@ -95,6 +91,9 @@ class LineImageEvent(APIView):
 
     if serializer.is_valid():
       serializer.save()
+
+      # send post request to s3_handler app
+      
       return Response(status=status.HTTP_200_OK)
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
