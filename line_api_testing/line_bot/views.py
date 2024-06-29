@@ -1,6 +1,9 @@
 import os
 
-from django.shortcuts import render
+from django.test import Client
+from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -21,6 +24,7 @@ handler = WebhookHandler(CHANNEL_SECRET)
 
 
 # Create your views here.
+@method_decorator(csrf_exempt, name='dispatch')
 class WebhookEvent(APIView):
   def post(self, request, format=None):
     verified = helpers.verify_signature(request, handler)
@@ -32,17 +36,29 @@ class WebhookEvent(APIView):
     events = data['events']
 
     for event in events:
-      response = helpers.check_event(request, event)
+      url = helpers.check_event(event)
 
-      if not response:
+      if not url:
         return Response(status=status.HTTP_403_FORBIDDEN)
       
-      if response == "Incomplete":
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+      print(f'Before the forward_request: {url}')
+      print(f'Sending the following data: {data}')
+      print()
+      response = self.forward_request(reverse(url), data)
+
+      print()
+      print('Completed the forward_request.')
       
     return Response(status=status.HTTP_200_OK)
   
+  def forward_request(self, url, data):
+    client = Client()
+    print("Sending the post request")
+    response = client.post(url, data, content_type='application/json')
+    print("Completed the post request")
 
+
+@method_decorator(csrf_exempt, name='dispatch')
 class LineImageEvent(APIView):
   def post(self, request, format=None):
     data = request.data
