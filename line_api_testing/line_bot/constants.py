@@ -1,5 +1,5 @@
 ROUTES = {
-  "image": "image/",
+  "image": "image-handler",
   "video": "line_bot/submit/video/",
   "file": "line_bot/submit/file/",
   "audio": "line_bot/submit/audio/",
