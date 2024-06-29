@@ -42,13 +42,7 @@ class WebhookEvent(APIView):
       if not url:
         return Response(status=status.HTTP_403_FORBIDDEN)
       
-      print(f'Before the forward_request: {url}')
-      print(f'Sending the following data: {data}')
-      print()
-      # response = self.forward_request(reverse(url), data)
-
-      response = requests.post(reverse(url), data)
-      print(response.status_code)
+      response = self.forward_request(reverse(url), data)
 
       print()
       print('Completed the forward_request.')
