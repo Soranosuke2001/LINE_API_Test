@@ -4,6 +4,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+import boto3
+
 from .serializers import (
   S3LineImageSerializer
 )
@@ -17,8 +19,12 @@ from .helpers import (
   s3_upload
 )
 
+# AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY", None)
+# AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", None)
 BUCKET_NAME = os.getenv("BUCKET_NAME", None)
 AWS_REGION = os.getenv("AWS_REGION", None)
+
+s3 = boto3.client('s3')
 
 
 # Create your views here.
@@ -64,7 +70,10 @@ class S3ImageUploadEvent(APIView):
     image = binary_image_convert(response.content)
 
     # upload the image to the s3 bucket
-    
+    s3_upload_state = s3_upload(s3, image, BUCKET_NAME, object_path)
+
+    if not s3_upload_state:
+      return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     return Response(status=status.HTTP_200_OK)
   

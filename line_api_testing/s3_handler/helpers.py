@@ -16,7 +16,7 @@ IMAGE_FORMAT = os.getenv("IMAGE_FORMAT", "JPEG")
 # Upload object to s3
 def s3_upload(s3, body, bucket_name, object_name):
     try:
-        s3.put_object(Bucket=bucket_name, Key=object_name, Body=body, ContentType='image/jpeg')
+        s3.put_object(Bucket=bucket_name, Key=object_name, Body=body, ContentType=f'image/{IMAGE_FORMAT.lower()}')
         print(f"{object_name} has been uploaded to {bucket_name}")
         return True
 
