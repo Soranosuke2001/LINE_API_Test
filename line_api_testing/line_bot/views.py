@@ -89,16 +89,17 @@ class LineImageEvent(APIView):
     }
 
     serializer = LineImageSerializer(data=filtered_data)
-    print('Serializer Data:')
-    print(serializer.data)
-    print()
 
     if serializer.is_valid():
+      print('Serializer Data:')
+      print(serializer.data)
+      print()
+
       serializer.save()
       print('Saved to DB')
       
       return Response(status=status.HTTP_200_OK)
 
+    print('Unable to save to DB')
     return Response(status=status.HTTP_400_BAD_REQUEST)
-
 
