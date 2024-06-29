@@ -19,3 +19,10 @@ def s3_upload(s3, body, bucket_name, object_name):
     
     return False
 
+
+# Get the month from datetime object
+def get_month(timestamp):
+    print('Here is the timestamp:')
+    print(type(timestamp))
+    print(timestamp)
+
