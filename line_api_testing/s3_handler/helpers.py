@@ -30,5 +30,5 @@ def get_month(timestamp):
   date_object = datetime.strptime(timestamp, date_format)
   month = date_object.month
 
-  return MONTH_MAP[month]
+  return date_object, MONTH_MAP[month]
 

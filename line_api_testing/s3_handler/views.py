@@ -23,19 +23,16 @@ class S3ImageUploadEvent(APIView):
 
     image_id = data['image_url']
     user_id = data['user_id']
-    month_taken = get_month(data['timestamp'])
+    timestamp, month_taken = get_month(data['timestamp'])
     object_path = f'{user_id}/{month_taken}/{image_id}'
     image_url = f'https://{BUCKET_NAME}.s3.{AWS_REGION}.amazonaws.com/{object_path}'
 
     filtered_data = {
-
+      "image_id": image_id,
+      "image_url": image_url,
+      "user_id": user_id,
+      "timestamp": timestamp,
     }
-
-    print()
-    print("S3 BUCKET")
-    print("The item will be stored here:")
-    print(image_url)
-    print()
 
     # save the image details to the model
 
