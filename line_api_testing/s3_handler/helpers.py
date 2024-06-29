@@ -9,7 +9,7 @@ from botocore.exceptions import NoCredentialsError
 
 from .constants import MONTH_MAP
 
-CHANNEL_ACCESS_TOKEN = os.getenv('CHANNEL_ACCESS_TOKEN', None)
+CHANNEL_ACCESS_TOKEN = os.getenv('LINE_CHANNEL_ACCESS_TOKEN', None)
 IMAGE_FORMAT = os.getenv("IMAGE_FORMAT", "JPEG")
 
 
