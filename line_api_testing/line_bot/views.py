@@ -18,6 +18,9 @@ from linebot.v3.webhooks import (
 )
 
 from . import helpers
+from .serializers import (
+  LineImageSerializer
+)
 
 CHANNEL_SECRET = os.getenv('LINE_CHANNEL_SECRET', None)
 
@@ -80,31 +83,17 @@ class LineImageEvent(APIView):
       "timestamp": dt_obj,
     }
 
-    print(filtered_data)
+    serializer = LineImageSerializer(data=filtered_data)
+    print('Serializer Data:')
+    print(serializer.data)
+    print()
 
-    # {
-    #   'type': 'message', 
-    #   'message': {
-    #     'type': 'image', 
-    #     'id': '514745570930196633', 
-    #     'quoteToken': 'DU3s8NW8pAic_c030S-sM8YL2UdFvE7lku2JHXGYG44Wt6KAe2rAXST2cqvXbOy7cht_7UAUKRPfXYO5D4YEvxssp2bCjYuIuaabo99ecyXJM6GEr92T6oBUFxz9xEFLoNYEdgAx74yzdXJswxExAw', 
-    #     'contentProvider': {
-    #       'type': 'line'
-    #     }
-    #   }, 
-    #   'webhookEventId': '01J1HBX3QYXVDEN9TKCYY8T5V9', 
-    #   'deliveryContext': {
-    #     'isRedelivery': False
-    #   }, 
-    #   'timestamp': 1719643573555, 
-    #   'source': {
-    #     'type': 'group', 
-    #     'groupId': 'C9f33edb10d267bd53df7099fbbbf7b30', 
-    #     'userId': 'U4a22d2c862cf4a9b7ecfeb70d33e8b0c'
-    #   }, 
-    #   'replyToken': '69800e932d69488f921b8a94e3be46f2', 
-    #   'mode': 'active'
-    # }
+    if serializer.is_valid():
+      serializer.save()
+      print('Saved to DB')
+      
+      return Response(status=status.HTTP_200_OK)
 
-    return Response(status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
