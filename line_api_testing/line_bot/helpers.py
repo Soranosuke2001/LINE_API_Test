@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from linebot.v3.exceptions import InvalidSignatureError
 
 from .constants import ROUTES
@@ -27,3 +29,12 @@ def check_event(event):
   url = ROUTES[event['message']['type']]
 
   return url
+
+
+# Change the timestamp to DateTime object
+def convert_timestamp(timestamp):
+  timestamp_seconds = timestamp / 1000
+  dt_obj = datetime.fromtimestamp(timestamp_seconds)
+
+  return dt_obj
+

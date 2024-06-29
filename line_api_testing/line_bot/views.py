@@ -60,39 +60,50 @@ class WebhookEvent(APIView):
 class LineImageEvent(APIView):
   def post(self, request, format=None):
     data = request.data
-    print(f'Received the following data:')
-    print(data)
-    print()
+    content_provider = data['message']['contentProvider']['type']
 
-    # filtered_data = {}
+    if content_provider == 'line':
+      image_url = data['message']['id']
+    else:
+      image_url = data['message']['contentProvider']['originalContentUrl']
+
+    dt_obj = helpers.convert_timestamp(data['timestamp'])
+
+    filtered_data = {
+      "image_url": image_url,
+      "content_provider": content_provider,
+      "source_type": data['source']['type'],
+      "reply_token": data['replyToken'],
+      "is_redelivery": data['deliverContext']['isRedelivery'],
+      "user_id": data['source']['userId'],
+      "webhook_event_id": data['webhookEventId'],
+      "timestamp": dt_obj,
+    }
+
+    print(filtered_data)
 
     # {
-    #   'destination': 'U11435cf1030c3004438fad38cdc07ea2', 
-    #   'events': [
-    #     {
-    #       'type': 'message', 
-    #       'message': {
-    #         'type': 'image', 
-    #         'id': '514723178850026160', 
-    #         'quoteToken': '_9OcuRCkdQjfam_TQVqc0KjCORs09jeyhCpvMeWymikTWLAE7qatBJEtIGQpayWLCggvVCkbznaHYfrGDJKPFQc54_4FSzMQYkXAJpAf_KRohkcMuC_ubbCIDtX-1uR8Nkilp1uTfU3mlPBxaEDD8g', 
-    #         'contentProvider': {
-    #           'type': 'line'
-    #         }
-    #       }, 
-    #       'webhookEventId': '01J1GZ5SKZJR97VSBGJY3P5BDX', 
-    #       'deliveryContext': {
-    #         'isRedelivery': False
-    #       }, 
-    #       'timestamp': 1719630226991, 
-    #       'source': {
-    #         'type': 'group', 
-    #         'groupId': 'C9f33edb10d267bd53df7099fbbbf7b30', 
-    #         'userId': 'U4a22d2c862cf4a9b7ecfeb70d33e8b0c'
-    #       }, 
-    #       'replyToken': 'acba536a95f54bbe91b3546090fcf020', 
-    #       'mode': 'active'
+    #   'type': 'message', 
+    #   'message': {
+    #     'type': 'image', 
+    #     'id': '514745570930196633', 
+    #     'quoteToken': 'DU3s8NW8pAic_c030S-sM8YL2UdFvE7lku2JHXGYG44Wt6KAe2rAXST2cqvXbOy7cht_7UAUKRPfXYO5D4YEvxssp2bCjYuIuaabo99ecyXJM6GEr92T6oBUFxz9xEFLoNYEdgAx74yzdXJswxExAw', 
+    #     'contentProvider': {
+    #       'type': 'line'
     #     }
-    #   ]
+    #   }, 
+    #   'webhookEventId': '01J1HBX3QYXVDEN9TKCYY8T5V9', 
+    #   'deliveryContext': {
+    #     'isRedelivery': False
+    #   }, 
+    #   'timestamp': 1719643573555, 
+    #   'source': {
+    #     'type': 'group', 
+    #     'groupId': 'C9f33edb10d267bd53df7099fbbbf7b30', 
+    #     'userId': 'U4a22d2c862cf4a9b7ecfeb70d33e8b0c'
+    #   }, 
+    #   'replyToken': '69800e932d69488f921b8a94e3be46f2', 
+    #   'mode': 'active'
     # }
 
     return Response(status=status.HTTP_200_OK)
