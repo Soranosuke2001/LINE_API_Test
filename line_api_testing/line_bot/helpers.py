@@ -38,3 +38,7 @@ def convert_timestamp(timestamp):
 
   return dt_obj
 
+
+# Save to S3 bucket
+def upload_s3():
+  pass

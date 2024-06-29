@@ -17,6 +17,9 @@ from linebot.v3.webhooks import (
   ImageMessageContent,
 )
 
+import boto3
+from botocore.exceptions import NoCredentialsError
+
 from . import helpers
 from .serializers import (
   LineImageSerializer
@@ -28,6 +31,7 @@ from .models import (
 CHANNEL_SECRET = os.getenv('LINE_CHANNEL_SECRET', None)
 
 handler = WebhookHandler(CHANNEL_SECRET)
+S3 = boto3.client('s3')
 
 
 # Create your views here.
@@ -59,7 +63,6 @@ class WebhookEvent(APIView):
   def forward_request(self, url, data):
     client = Client()
     response = client.post(url, data, content_type='application/json')
-
     return response
 
 
@@ -75,13 +78,12 @@ class LineImageEvent(APIView):
   def post(self, request, format=None):
     data = request.data
     content_provider = data['message']['contentProvider']['type']
+    dt_obj = helpers.convert_timestamp(data['timestamp'])
 
     if content_provider == 'line':
       image_url = data['message']['id']
     else:
       image_url = data['message']['contentProvider']['originalContentUrl']
-
-    dt_obj = helpers.convert_timestamp(data['timestamp'])
 
     filtered_data = {
       "image_url": image_url,
