@@ -51,4 +51,10 @@ class S3ImageUploadEvent(APIView):
 
 
     return Response(status=status.HTTP_200_OK)
+  
+  
+  def delete(self, request, *args, **kwargs):
+    S3LineImage.objects.all().delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
+    
