@@ -60,34 +60,21 @@ class S3ImageUploadEvent(APIView):
     
     serializer.save()
 
-    print("fetching image")
-    print()
-
     # fetch the image from line data api
     response = fetch_image_binary(image_id)
 
     if not response:
       return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-    print('got the image')
-    print()
     # convert the binary data to image
     image = binary_image_convert(response.content)
-    print('converted the image')
-    print()
-
-    print('about to upload the image')
-    print()
+    
     # upload the image to the s3 bucket
     s3_upload_state = s3_upload(s3, image, BUCKET_NAME, object_path)
-    print('uploaded the image')
-    print()
 
     if not s3_upload_state:
       return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    print('WE DID IT!')
-    print()
     return Response(status=status.HTTP_200_OK)
   
   
