@@ -1,4 +1,8 @@
+from datetime import datetime
+
 from botocore.exceptions import NoCredentialsError
+
+from .constants import MONTH_MAP
 
 
 # Upload object to s3
@@ -22,7 +26,9 @@ def s3_upload(s3, body, bucket_name, object_name):
 
 # Get the month from datetime object
 def get_month(timestamp):
-    print('Here is the timestamp:')
-    print(type(timestamp))
-    print(timestamp)
+  date_format = "%Y-%m-%dT%H:%M:%S.%f"
+  date_object = datetime.strptime(timestamp, date_format)
+  month = date_object.month
+
+  return MONTH_MAP[month]
 
