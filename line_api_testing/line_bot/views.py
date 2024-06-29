@@ -42,27 +42,58 @@ class WebhookEvent(APIView):
       if not url:
         return Response(status=status.HTTP_403_FORBIDDEN)
       
-      response = self.forward_request(reverse(url), data)
+      response = self.forward_request(reverse(url), event)
 
-      print()
-      print('Completed the forward_request.')
-      
+      if not response.status_code == 200:
+        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
     return Response(status=status.HTTP_200_OK)
   
   def forward_request(self, url, data):
     client = Client()
-    print("Sending the post request")
     response = client.post(url, data, content_type='application/json')
-    print("Completed the post request")
+
+    return response
 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class LineImageEvent(APIView):
   def post(self, request, format=None):
     data = request.data
-    print("This is the LINE IMAGE EVENT")
+    print(f'Received the following data:')
     print(data)
     print()
+
+    # filtered_data = {}
+
+    # {
+    #   'destination': 'U11435cf1030c3004438fad38cdc07ea2', 
+    #   'events': [
+    #     {
+    #       'type': 'message', 
+    #       'message': {
+    #         'type': 'image', 
+    #         'id': '514723178850026160', 
+    #         'quoteToken': '_9OcuRCkdQjfam_TQVqc0KjCORs09jeyhCpvMeWymikTWLAE7qatBJEtIGQpayWLCggvVCkbznaHYfrGDJKPFQc54_4FSzMQYkXAJpAf_KRohkcMuC_ubbCIDtX-1uR8Nkilp1uTfU3mlPBxaEDD8g', 
+    #         'contentProvider': {
+    #           'type': 'line'
+    #         }
+    #       }, 
+    #       'webhookEventId': '01J1GZ5SKZJR97VSBGJY3P5BDX', 
+    #       'deliveryContext': {
+    #         'isRedelivery': False
+    #       }, 
+    #       'timestamp': 1719630226991, 
+    #       'source': {
+    #         'type': 'group', 
+    #         'groupId': 'C9f33edb10d267bd53df7099fbbbf7b30', 
+    #         'userId': 'U4a22d2c862cf4a9b7ecfeb70d33e8b0c'
+    #       }, 
+    #       'replyToken': 'acba536a95f54bbe91b3546090fcf020', 
+    #       'mode': 'active'
+    #     }
+    #   ]
+    # }
 
     return Response(status=status.HTTP_200_OK)
 
