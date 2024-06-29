@@ -39,7 +39,7 @@ class WebhookEvent(APIView):
       url = helpers.construct_url('line', event)
 
       if not url:
-        return Response(status=status.HTTP_403_FORBIDDEN)
+        return Response(status=status.HTTP_404_NOT_FOUND)
       
       response = helpers.forward_request(reverse(url), event)
 
@@ -85,17 +85,18 @@ class LineImageEvent(APIView):
       serializer.save()
 
       # send post request to s3_handler app
-      url = helpers.construct_url('s3', 'image')
-      print('Sending post request to: ' + url)
-      print()
-      response = helpers.forward_request(reverse(url), filtered_data)
-      print()
-      print('Post request was successful')
+      url = helpers.construct_url('s3', data['message']['type'])
 
-      return Response(status=status.HTTP_200_OK)
+      if not url:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+      response = helpers.forward_request(reverse(url), filtered_data)
+
+      if response.status_code == 200:
+        return Response(status=status.HTTP_200_OK)
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
-  
+
 
   def delete(self, request, *args, **kwargs):
     LineImage.objects.all().delete()

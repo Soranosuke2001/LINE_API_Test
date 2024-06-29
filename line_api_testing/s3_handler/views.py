@@ -13,7 +13,6 @@ from .models import (
 # Create your views here.
 class S3ImageUploadEvent(APIView):
   def post(self, request, format=None):
-    print('Request received')
     print(request.body)
 
     return Response(status=status.HTTP_200_OK)
