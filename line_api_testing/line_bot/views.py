@@ -1,7 +1,5 @@
 import os
-import requests
 
-from django.test import Client
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -38,23 +36,17 @@ class WebhookEvent(APIView):
     events = data['events']
 
     for event in events:
-      url = helpers.check_event(event)
+      url = helpers.construct_url('line', event)
 
       if not url:
         return Response(status=status.HTTP_403_FORBIDDEN)
       
-      response = self.forward_request(reverse(url), event)
+      response = helpers.forward_request(reverse(url), event)
 
       if not response.status_code == 200:
         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     return Response(status=status.HTTP_200_OK)
-  
-
-  def forward_request(self, url, data):
-    client = Client()
-    response = client.post(url, data, content_type='application/json')
-    return response
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -93,7 +85,13 @@ class LineImageEvent(APIView):
       serializer.save()
 
       # send post request to s3_handler app
-      
+      url = helpers.construct_url('s3', 'image')
+      print('Sending post request to: ' + url)
+      print()
+      response = helpers.forward_request(reverse(url), filtered_data)
+      print()
+      print('Post request was successful')
+
       return Response(status=status.HTTP_200_OK)
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
