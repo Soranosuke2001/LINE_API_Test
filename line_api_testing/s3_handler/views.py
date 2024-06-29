@@ -35,8 +35,15 @@ class S3ImageUploadEvent(APIView):
     }
 
     # save the image details to the model
+    serializer = S3LineImageSerializer(data=filtered_data)
+
+    if not serializer.is_valid():
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    serializer.save()
 
     # fetch the image from line data api
+    print("data saved")
 
     # convert the binary data to image
 
