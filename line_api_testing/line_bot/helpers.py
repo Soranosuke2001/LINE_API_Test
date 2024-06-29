@@ -51,7 +51,3 @@ def forward_request(url, data):
   response = client.post(url, data, content_type='application/json')
   return response
 
-
-# Save to S3 bucket
-def upload_s3():
-  pass
