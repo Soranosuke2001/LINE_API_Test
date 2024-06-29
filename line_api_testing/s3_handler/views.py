@@ -18,6 +18,13 @@ AWS_REGION = os.getenv("AWS_REGION", None)
 
 # Create your views here.
 class S3ImageUploadEvent(APIView):
+  def get(self, request, format=None):
+    s3_images = S3LineImage.objects.all()
+
+    serializer = S3LineImageSerializer(s3_images, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
   def post(self, request, format=None):
     data = request.data
 
@@ -57,4 +64,3 @@ class S3ImageUploadEvent(APIView):
     S3LineImage.objects.all().delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
-    
