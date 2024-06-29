@@ -44,7 +44,7 @@ class WebhookEvent(APIView):
       response = helpers.forward_request(reverse(url), event)
 
       if not response.status_code == 200:
-        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
 
     return Response(status=status.HTTP_200_OK)
 
