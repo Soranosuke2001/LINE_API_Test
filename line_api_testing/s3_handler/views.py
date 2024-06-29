@@ -19,8 +19,8 @@ from .helpers import (
   s3_upload
 )
 
-# AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY", None)
-# AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", None)
+AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY", None)
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", None)
 BUCKET_NAME = os.getenv("BUCKET_NAME", None)
 AWS_REGION = os.getenv("AWS_REGION", None)
 
