@@ -20,4 +20,5 @@ from django.urls import path, include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("line_bot/", include("line_bot.urls")),
+    path("s3_bucket/", include("s3_handler.urls")),
 ]

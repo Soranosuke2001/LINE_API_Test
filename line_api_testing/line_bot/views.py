@@ -11,11 +11,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from linebot.v3 import WebhookHandler
-from linebot.v3.webhooks import (
-  MessageEvent,
-  TextMessageContent,
-  ImageMessageContent,
-)
 
 import boto3
 from botocore.exceptions import NoCredentialsError
