@@ -1,7 +1,3 @@
-import requests
-
-from django.shortcuts import redirect
-
 from linebot.v3.exceptions import InvalidSignatureError
 
 from .constants import ROUTES

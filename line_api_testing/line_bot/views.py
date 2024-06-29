@@ -1,4 +1,5 @@
 import os
+import requests
 
 from django.test import Client
 from django.urls import reverse
@@ -44,7 +45,10 @@ class WebhookEvent(APIView):
       print(f'Before the forward_request: {url}')
       print(f'Sending the following data: {data}')
       print()
-      response = self.forward_request(reverse(url), data)
+      # response = self.forward_request(reverse(url), data)
+
+      response = requests.post(reverse(url), data)
+      print(response.status_code)
 
       print()
       print('Completed the forward_request.')
