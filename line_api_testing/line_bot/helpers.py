@@ -48,9 +48,6 @@ def convert_timestamp(timestamp):
 # Forward POST request
 def forward_request(url, data):
   client = Client()
-  print()
-  print(f'Data: {data}')
-  print()
   response = client.post(url, data, content_type='application/json')
   return response
 

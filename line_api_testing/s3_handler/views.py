@@ -60,6 +60,9 @@ class S3ImageUploadEvent(APIView):
     
     serializer.save()
 
+    print("fetching image")
+    print()
+
     # fetch the image from line data api
     response = fetch_image_binary(image_id)
 

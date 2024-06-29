@@ -38,10 +38,6 @@ class WebhookEvent(APIView):
     for event in events:
       url = helpers.construct_url('line', event)
 
-      print()
-      print('URL: ' + url)
-      print()
-
       if not url:
         return Response(status=status.HTTP_404_NOT_FOUND)
       
