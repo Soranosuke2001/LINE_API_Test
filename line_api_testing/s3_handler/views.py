@@ -13,7 +13,21 @@ from .models import (
 # Create your views here.
 class S3ImageUploadEvent(APIView):
   def post(self, request, format=None):
-    print(request.body)
+    data = request.data
+    image_id = data['image_url']
+
+    filtered_data = {
+
+    }
+
+    # save the image details to the model
+
+    # fetch the image from line data api
+
+    # convert the binary data to image
+
+    # upload the image to the s3 bucket
+
 
     return Response(status=status.HTTP_200_OK)
 

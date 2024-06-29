@@ -10,8 +10,8 @@ class S3LineImageSerializer(serializers.ModelSerializer):
     model = S3LineImage
     fields = [
       "image_id",
+      "image_url",
       "user_id",
       "timestamp",
     ]
 
-    
