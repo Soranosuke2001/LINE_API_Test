@@ -74,7 +74,7 @@ class LineImageEvent(APIView):
       "content_provider": content_provider,
       "source_type": data['source']['type'],
       "reply_token": data['replyToken'],
-      "is_redelivery": data['deliverContext']['isRedelivery'],
+      "is_redelivery": data['deliveryContext']['isRedelivery'],
       "user_id": data['source']['userId'],
       "webhook_event_id": data['webhookEventId'],
       "timestamp": dt_obj,
