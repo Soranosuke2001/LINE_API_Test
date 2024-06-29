@@ -63,6 +63,11 @@ class WebhookEvent(APIView):
 class LineImageEvent(APIView):
   def post(self, request, format=None):
     data = request.data
+
+    print('Data Received:')
+    print(data)
+    print()
+
     content_provider = data['message']['contentProvider']['type']
 
     if content_provider == 'line':
