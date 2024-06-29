@@ -91,10 +91,6 @@ class LineImageEvent(APIView):
     serializer = LineImageSerializer(data=filtered_data)
 
     if serializer.is_valid():
-      print('Serializer Data:')
-      print(serializer.data)
-      print()
-
       serializer.save()
       print('Saved to DB')
       
