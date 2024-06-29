@@ -21,6 +21,9 @@ from . import helpers
 from .serializers import (
   LineImageSerializer
 )
+from .models import (
+  LineImage
+)
 
 CHANNEL_SECRET = os.getenv('LINE_CHANNEL_SECRET', None)
 
@@ -52,6 +55,7 @@ class WebhookEvent(APIView):
 
     return Response(status=status.HTTP_200_OK)
   
+
   def forward_request(self, url, data):
     client = Client()
     response = client.post(url, data, content_type='application/json')
@@ -61,13 +65,15 @@ class WebhookEvent(APIView):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class LineImageEvent(APIView):
+  def get(self, request, format=None):
+    uploaded_images = LineImage.objects.all()
+
+    serializer = LineImageSerializer(uploaded_images, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
   def post(self, request, format=None):
     data = request.data
-
-    print('Data Received:')
-    print(data)
-    print()
-
     content_provider = data['message']['contentProvider']['type']
 
     if content_provider == 'line':
@@ -92,10 +98,12 @@ class LineImageEvent(APIView):
 
     if serializer.is_valid():
       serializer.save()
-      print('Saved to DB')
-      
       return Response(status=status.HTTP_200_OK)
 
-    print('Unable to save to DB')
     return Response(status=status.HTTP_400_BAD_REQUEST)
+  
+
+  def delete(self, request, *args, **kwargs):
+    LineImage.objects.all().delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
