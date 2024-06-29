@@ -10,7 +10,12 @@ from .serializers import (
 from .models import (
   S3LineImage
 )
-from .helpers import get_month
+from .helpers import (
+  get_month,
+  fetch_image_binary,
+  binary_image_convert,
+  s3_upload
+)
 
 BUCKET_NAME = os.getenv("BUCKET_NAME", None)
 AWS_REGION = os.getenv("AWS_REGION", None)
@@ -23,7 +28,7 @@ class S3ImageUploadEvent(APIView):
 
     serializer = S3LineImageSerializer(s3_images, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
 
   def post(self, request, format=None):
     data = request.data
@@ -50,12 +55,16 @@ class S3ImageUploadEvent(APIView):
     serializer.save()
 
     # fetch the image from line data api
-    print("data saved")
+    response = fetch_image_binary(image_id)
+
+    if not response:
+      return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     # convert the binary data to image
+    image = binary_image_convert(response.content)
 
     # upload the image to the s3 bucket
-
+    
 
     return Response(status=status.HTTP_200_OK)
   
