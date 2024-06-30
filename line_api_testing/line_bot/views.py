@@ -122,7 +122,7 @@ class LineVideoEvent(APIView):
 
 
   def delete(self, request, *args, **kwargs):
-    LineImage.objects.all().delete()
+    LineVideo.objects.all().delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -158,7 +158,7 @@ class LineAudioEvent(APIView):
 
 
   def delete(self, request, *args, **kwargs):
-    LineImage.objects.all().delete()
+    LineAudio.objects.all().delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -194,6 +194,6 @@ class LineFileEvent(APIView):
 
 
   def delete(self, request, *args, **kwargs):
-    LineImage.objects.all().delete()
+    LineFile.objects.all().delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
