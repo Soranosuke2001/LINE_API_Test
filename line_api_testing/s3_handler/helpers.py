@@ -2,22 +2,25 @@ import os
 import requests
 from datetime import datetime
 
+import ffmpeg
 from PIL import Image
 from io import BytesIO
 
 from botocore.exceptions import NoCredentialsError
 
-from .constants import MONTH_MAP
+from .constants import MONTH_MAP, CONTENT_TYPES
 
 CHANNEL_ACCESS_TOKEN = os.getenv('LINE_CHANNEL_ACCESS_TOKEN', None)
-IMAGE_FORMAT = os.getenv("IMAGE_FORMAT", "JPEG")
+
+BUCKET_NAME = os.getenv("BUCKET_NAME", None)
+AWS_REGION = os.getenv("AWS_REGION", None)
 
 
 # Upload object to s3
-def s3_upload(s3, body, bucket_name, object_name):
+def s3_upload(s3, body, object_name, file_type):
   try:
-      s3.put_object(Bucket=bucket_name, Key=object_name, Body=body, ContentType=f'image/jpeg')
-      print(f"{object_name} has been uploaded to {bucket_name}")
+      s3.put_object(Bucket=BUCKET_NAME, Key=object_name, Body=body, ContentType=CONTENT_TYPES[file_type])
+      print(f"{object_name} has been uploaded to {BUCKET_NAME}")
       return True
 
   except FileNotFoundError:
@@ -46,15 +49,15 @@ def binary_image_convert(content):
     image = Image.open(BytesIO(content))
     image_bytes = BytesIO()
 
-    image.save(image_bytes, format=IMAGE_FORMAT)
+    image.save(image_bytes, format='JPEG')
     image_bytes.seek(0)
 
     return image_bytes
 
 
 # Fetch the binary image from LINE data API
-def fetch_image_binary(image_id):
-    url = f'https://api-data.line.me/v2/bot/message/{image_id}/content'
+def fetch_binary_data(id):
+    url = f'https://api-data.line.me/v2/bot/message/{id}/content'
     headers = {
       'Authorization': f'Bearer {CHANNEL_ACCESS_TOKEN}'
     }
@@ -66,3 +69,20 @@ def fetch_image_binary(image_id):
     
     return response
 
+
+# Created filtered data object
+def construct_filtered_data(data):
+    id = data[data['message']['type']]
+    user_id = data['user_id']
+    timestamp, month_taken = get_month(data['timestamp'])
+    object_path = f'{user_id}/{month_taken}/{id}'
+    url = f'https://{BUCKET_NAME}.s3.{AWS_REGION}.amazonaws.com/{object_path}'
+
+    return {
+        f'{data['message']['type']}_id': id,
+        f'{data['message']['type']}_url': url,
+        "user_id": user_id,
+        "timestamp": timestamp,
+    }, id, object_path
+
+ 

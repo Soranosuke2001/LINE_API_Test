@@ -7,22 +7,26 @@ from rest_framework.views import APIView
 import boto3
 
 from .serializers import (
-  S3LineImageSerializer
+  S3LineImageSerializer,
+  S3LineVideoSerializer,
+  S3LineAudioSerializer,
+  S3LineFileSerializer,
 )
 from .models import (
-  S3LineImage
+  S3LineImage,
+  S3LineVideo,
+  S3LineAudio,
+  S3LineFile,
 )
 from .helpers import (
-  get_month,
-  fetch_image_binary,
+  construct_filtered_data,
+  fetch_binary_data,
   binary_image_convert,
   s3_upload
 )
 
-AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY", None)
-AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", None)
-BUCKET_NAME = os.getenv("BUCKET_NAME", None)
-AWS_REGION = os.getenv("AWS_REGION", None)
+# AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY", None)
+# AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", None)
 
 s3 = boto3.client('s3')
 
@@ -37,20 +41,7 @@ class S3ImageUploadEvent(APIView):
 
 
   def post(self, request, format=None):
-    data = request.data
-
-    image_id = data['image_url']
-    user_id = data['user_id']
-    timestamp, month_taken = get_month(data['timestamp'])
-    object_path = f'{user_id}/{month_taken}/{image_id}'
-    image_url = f'https://{BUCKET_NAME}.s3.{AWS_REGION}.amazonaws.com/{object_path}'
-
-    filtered_data = {
-      "image_id": image_id,
-      "image_url": image_url,
-      "user_id": user_id,
-      "timestamp": timestamp,
-    }
+    filtered_data, image_id, object_path = construct_filtered_data(request.data)
 
     # save the image details to the model
     serializer = S3LineImageSerializer(data=filtered_data)
@@ -61,7 +52,7 @@ class S3ImageUploadEvent(APIView):
     serializer.save()
 
     # fetch the image from line data api
-    response = fetch_image_binary(image_id)
+    response = fetch_binary_data(image_id)
 
     if not response:
       return Response(status=status.HTTP_401_UNAUTHORIZED)
@@ -70,7 +61,47 @@ class S3ImageUploadEvent(APIView):
     image = binary_image_convert(response.content)
     
     # upload the image to the s3 bucket
-    s3_upload_state = s3_upload(s3, image, BUCKET_NAME, object_path)
+    s3_upload_state = s3_upload(s3, image, object_path, 'image')
+
+    if not s3_upload_state:
+      return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    return Response(status=status.HTTP_200_OK)
+  
+  
+  def delete(self, request, *args, **kwargs):
+    S3LineImage.objects.all().delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# Create your views here.
+class S3VideoUploadEvent(APIView):
+  def get(self, request, format=None):
+    s3_videos = S3LineVideo.objects.all()
+
+    serializer = S3LineVideoSerializer(s3_videos, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+  def post(self, request, format=None):
+    filtered_data, video_id, object_path = construct_filtered_data(request.data)
+
+    # save the image details to the model
+    serializer = S3LineVideoSerializer(data=filtered_data)
+
+    if not serializer.is_valid():
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    serializer.save()
+
+    # fetch the image from line data api
+    response = fetch_binary_data(video_id)
+
+    if not response:
+      return Response(status=status.HTTP_401_UNAUTHORIZED)
+    
+    # upload the image to the s3 bucket
+    s3_upload_state = s3_upload(s3, response.content, object_path, 'video')
 
     if not s3_upload_state:
       return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)

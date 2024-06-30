@@ -12,3 +12,8 @@ MONTH_MAP = {
   11: "November",
   12: "December",
 }
+
+CONTENT_TYPES = {
+  'image': 'image/jpeg',
+  'video': 'video/mp4',
+}
