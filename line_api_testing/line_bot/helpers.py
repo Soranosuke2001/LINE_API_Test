@@ -39,7 +39,12 @@ def construct_url(url_type, event):
     if not event['type'] == 'message':
       return None
     
-    return LINE_ROUTES[event['message']['type']]
+    message_type = event['message']['type']
+
+    if message_type not in LINE_ROUTES.keys():
+      return 'pass'
+
+    return LINE_ROUTES[message_type]
   elif url_type == 's3':
     return AWS_ROUTES[event]
 

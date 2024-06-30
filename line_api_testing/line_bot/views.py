@@ -50,6 +50,9 @@ class WebhookEvent(APIView):
       if not url:
         return Response(status=status.HTTP_404_NOT_FOUND)
       
+      if url == 'pass':
+        continue
+      
       response = helpers.forward_request(reverse(url), event)
 
       if not response.status_code == 200:
