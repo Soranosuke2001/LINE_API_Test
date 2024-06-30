@@ -21,7 +21,7 @@ class LineImage(models.Model):
 
 class LineVideo(models.Model):
   video_url = models.CharField(max_length=256)
-  preview_image_url = models.CharField(max_length=256)
+  preview_image_url = models.CharField(max_length=256, blank=True)
   duration_ms = models.IntegerField()
 
   content_provider = models.CharField(max_length=10)
