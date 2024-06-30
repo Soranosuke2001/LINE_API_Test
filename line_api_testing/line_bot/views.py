@@ -40,6 +40,10 @@ class WebhookEvent(APIView):
     
     events = request.data['events']
 
+    print('Body:')
+    print(request.body)
+    print()
+
     for event in events:
       url = helpers.construct_url('line', event)
 
