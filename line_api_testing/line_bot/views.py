@@ -56,13 +56,6 @@ class WebhookEvent(APIView):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class LineImageEvent(APIView):
-  def get(self, request, format=None):
-    uploaded_images = LineImage.objects.all()
-
-    serializer = LineImageSerializer(uploaded_images, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-
   def post(self, request, format=None):
     filtered_data = helpers.construct_image_data(request.data)
 
@@ -92,13 +85,6 @@ class LineImageEvent(APIView):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class LineVideoEvent(APIView):
-  def get(self, request, format=None):
-    uploaded_videos = LineVideo.objects.all()
-
-    serializer = LineVideoSerializer(uploaded_videos, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-
   def post(self, request, format=None):
     filtered_data = helpers.construct_video_data(request.data)
 
@@ -128,13 +114,6 @@ class LineVideoEvent(APIView):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class LineAudioEvent(APIView):
-  def get(self, request, format=None):
-    uploaded_audios = LineAudio.objects.all()
-
-    serializer = LineAudioSerializer(uploaded_audios, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-
   def post(self, request, format=None):
     filtered_data = helpers.construct_audio_data(request.data)
 
@@ -164,13 +143,6 @@ class LineAudioEvent(APIView):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class LineFileEvent(APIView):
-  def get(self, request, format=None):
-    uploaded_files = LineFile.objects.all()
-
-    serializer = LineFileSerializer(uploaded_files, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-
   def post(self, request, format=None):
     filtered_data = helpers.construct_file_data(request.data)
 
@@ -196,4 +168,47 @@ class LineFileEvent(APIView):
   def delete(self, request, *args, **kwargs):
     LineFile.objects.all().delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class LineImageFetchEvent(APIView):
+  def get(self, request, format=None):
+    # Add some verification step
+    # ...
+
+    uploaded_images = LineImage.objects.all()
+
+    serializer = LineImageSerializer(uploaded_images, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class LineVideoFetchEvent(APIView):
+  def get(self, request, format=None):
+    # Add some verification step
+    # ...
+    uploaded_videos = LineVideo.objects.all()
+
+    serializer = LineVideoSerializer(uploaded_videos, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class LineAudioFetchEvent(APIView):
+  def get(self, request, format=None):
+    # Add some verification step
+    # ...
+    
+    uploaded_audios = LineAudio.objects.all()
+
+    serializer = LineAudioSerializer(uploaded_audios, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class LineFileFetchEvent(APIView):
+  def get(self, request, format=None):
+    # Add some verification step
+    # ...
+
+    uploaded_files = LineFile.objects.all()
+
+    serializer = LineFileSerializer(uploaded_files, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
