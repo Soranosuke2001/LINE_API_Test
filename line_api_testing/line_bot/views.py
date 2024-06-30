@@ -43,13 +43,17 @@ class WebhookEvent(APIView):
     for event in events:
       url = helpers.construct_url('line', event)
 
+      print(f'Received the event: {event}')
+      print()
+
       if not url:
         return Response(status=status.HTTP_404_NOT_FOUND)
       
-      response = helpers.forward_request(reverse(url), event)
+      return Response(status=status.HTTP_200_OK)
+      # response = helpers.forward_request(reverse(url), event)
 
-      if not response.status_code == 200:
-        return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
+      # if not response.status_code == 200:
+      #   return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
 
     return Response(status=status.HTTP_200_OK)
 
