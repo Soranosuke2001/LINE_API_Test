@@ -12,10 +12,16 @@ from linebot.v3 import WebhookHandler
 
 from . import helpers
 from .serializers import (
-  LineImageSerializer
+  LineImageSerializer,
+  LineVideoSerializer,
+  LineAudioSerializer,
+  LineFileSerializer
 )
 from .models import (
-  LineImage
+  LineImage,
+  LineVideo,
+  LineAudio,
+  LineFile
 )
 
 CHANNEL_SECRET = os.getenv('LINE_CHANNEL_SECRET', None)
@@ -61,6 +67,114 @@ class LineImageEvent(APIView):
     filtered_data = helpers.construct_image_data(request.data)
 
     serializer = LineImageSerializer(data=filtered_data)
+
+    if serializer.is_valid():
+      serializer.save()
+
+      # send post request to s3_handler app
+      url = helpers.construct_url('s3', request.data['message']['type'])
+
+      if not url:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+      response = helpers.forward_request(reverse(url), filtered_data)
+
+      if response.status_code == 200:
+        return Response(status=status.HTTP_200_OK)
+
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+  def delete(self, request, *args, **kwargs):
+    LineImage.objects.all().delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class LineVideoEvent(APIView):
+  def get(self, request, format=None):
+    uploaded_videos = LineVideo.objects.all()
+
+    serializer = LineVideoSerializer(uploaded_videos, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+  def post(self, request, format=None):
+    filtered_data = helpers.construct_video_data(request.data)
+
+    serializer = LineVideoSerializer(data=filtered_data)
+
+    if serializer.is_valid():
+      serializer.save()
+
+      # send post request to s3_handler app
+      url = helpers.construct_url('s3', request.data['message']['type'])
+
+      if not url:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+      response = helpers.forward_request(reverse(url), filtered_data)
+
+      if response.status_code == 200:
+        return Response(status=status.HTTP_200_OK)
+
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+  def delete(self, request, *args, **kwargs):
+    LineImage.objects.all().delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class LineAudioEvent(APIView):
+  def get(self, request, format=None):
+    uploaded_audios = LineAudio.objects.all()
+
+    serializer = LineAudioSerializer(uploaded_audios, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+  def post(self, request, format=None):
+    filtered_data = helpers.construct_audio_data(request.data)
+
+    serializer = LineAudioSerializer(data=filtered_data)
+
+    if serializer.is_valid():
+      serializer.save()
+
+      # send post request to s3_handler app
+      url = helpers.construct_url('s3', request.data['message']['type'])
+
+      if not url:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+      response = helpers.forward_request(reverse(url), filtered_data)
+
+      if response.status_code == 200:
+        return Response(status=status.HTTP_200_OK)
+
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+  def delete(self, request, *args, **kwargs):
+    LineImage.objects.all().delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class LineFileEvent(APIView):
+  def get(self, request, format=None):
+    uploaded_files = LineFile.objects.all()
+
+    serializer = LineFileSerializer(uploaded_files, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+  def post(self, request, format=None):
+    filtered_data = helpers.construct_file_data(request.data)
+
+    serializer = LineFileSerializer(data=filtered_data)
 
     if serializer.is_valid():
       serializer.save()
