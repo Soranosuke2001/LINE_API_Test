@@ -112,11 +112,16 @@ class LineVideoEvent(APIView):
 
       if not url:
         return Response(status=status.HTTP_404_NOT_FOUND)
+      
+      print(f'Sending post request to: {url}')
+      print()
 
-      response = helpers.forward_request(reverse(url), filtered_data)
+      return Response(status=status.HTTP_200_OK)
 
-      if response.status_code == 200:
-        return Response(status=status.HTTP_200_OK)
+      # response = helpers.forward_request(reverse(url), filtered_data)
+
+      # if response.status_code == 200:
+      #   return Response(status=status.HTTP_200_OK)
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -149,10 +154,14 @@ class LineAudioEvent(APIView):
       if not url:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-      response = helpers.forward_request(reverse(url), filtered_data)
+      print(f'Sending post request to: {url}')
+      print()
 
-      if response.status_code == 200:
-        return Response(status=status.HTTP_200_OK)
+      return Response(status=status.HTTP_200_OK)
+      # response = helpers.forward_request(reverse(url), filtered_data)
+
+      # if response.status_code == 200:
+      #   return Response(status=status.HTTP_200_OK)
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -185,10 +194,15 @@ class LineFileEvent(APIView):
       if not url:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-      response = helpers.forward_request(reverse(url), filtered_data)
+      print(f'Sending post request to: {url}')
+      print()
 
-      if response.status_code == 200:
-        return Response(status=status.HTTP_200_OK)
+      return Response(status=status.HTTP_200_OK)
+
+      # response = helpers.forward_request(reverse(url), filtered_data)
+
+      # if response.status_code == 200:
+      #   return Response(status=status.HTTP_200_OK)
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
