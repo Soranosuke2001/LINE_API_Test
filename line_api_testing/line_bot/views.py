@@ -43,17 +43,13 @@ class WebhookEvent(APIView):
     for event in events:
       url = helpers.construct_url('line', event)
 
-      print(f'Received the event: {event}')
-      print()
-
       if not url:
         return Response(status=status.HTTP_404_NOT_FOUND)
       
-      return Response(status=status.HTTP_200_OK)
-      # response = helpers.forward_request(reverse(url), event)
+      response = helpers.forward_request(reverse(url), event)
 
-      # if not response.status_code == 200:
-      #   return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
+      if not response.status_code == 200:
+        return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
 
     return Response(status=status.HTTP_200_OK)
 
@@ -106,6 +102,8 @@ class LineVideoEvent(APIView):
   def post(self, request, format=None):
     filtered_data = helpers.construct_video_data(request.data)
 
+    print(f'Here is the filtered data: {filtered_data}')
+
     serializer = LineVideoSerializer(data=filtered_data)
 
     if serializer.is_valid():
@@ -127,6 +125,7 @@ class LineVideoEvent(APIView):
       # if response.status_code == 200:
       #   return Response(status=status.HTTP_200_OK)
 
+    print("The serializer was not valid")
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
