@@ -41,7 +41,7 @@ class S3ImageUploadEvent(APIView):
 
 
   def post(self, request, format=None):
-    filtered_data, image_id, object_path = construct_filtered_data(request.data)
+    filtered_data, image_id, object_path = construct_filtered_data(request.data, 'image')
 
     # save the image details to the model
     serializer = S3LineImageSerializer(data=filtered_data)
@@ -84,7 +84,7 @@ class S3VideoUploadEvent(APIView):
 
 
   def post(self, request, format=None):
-    filtered_data, video_id, object_path = construct_filtered_data(request.data)
+    filtered_data, video_id, object_path = construct_filtered_data(request.data, 'video')
 
     # save the image details to the model
     serializer = S3LineVideoSerializer(data=filtered_data)

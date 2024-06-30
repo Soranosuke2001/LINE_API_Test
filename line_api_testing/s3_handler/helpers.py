@@ -71,21 +71,16 @@ def fetch_binary_data(id):
 
 
 # Created filtered data object
-def construct_filtered_data(data):
-    print(data)
-    print()
-    id = '1'
-    # id = data['message']['id']
+def construct_filtered_data(data, event_type):
+    id = data[f'{event_type}_url']
     user_id = data['user_id']
     timestamp, month_taken = get_month(data['timestamp'])
     object_path = f'{user_id}/{month_taken}/{id}'
     url = f'https://{BUCKET_NAME}.s3.{AWS_REGION}.amazonaws.com/{object_path}'
 
     return {
-        # f'{data['message']['type']}_id': id,
-        # f'{data['message']['type']}_url': url,
-        f'image_id': id,
-        f'image_url': url,
+        f'{event_type}_id': id,
+        f'{event_type}_url': url,
         "user_id": user_id,
         "timestamp": timestamp,
     }, id, object_path
