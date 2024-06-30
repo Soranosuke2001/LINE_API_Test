@@ -20,7 +20,7 @@ AWS_REGION = os.getenv("AWS_REGION", None)
 def s3_upload(s3, body, object_name, file_type, content_type=None):
   try:
     if content_type:
-        s3.put_object(Bucket=BUCKET_NAME, Key=object_name, Body=body, ContentType=content_type)
+       s3.put_object(Bucket=BUCKET_NAME, Key=object_name, Body=body, ContentType=content_type)
     else: 
         s3.put_object(Bucket=BUCKET_NAME, Key=object_name, Body=body, ContentType=CONTENT_TYPES[file_type])
         
@@ -28,13 +28,14 @@ def s3_upload(s3, body, object_name, file_type, content_type=None):
     return True
 
   except FileNotFoundError:
-      print("The file was not found")
+    print("The file was not found")
 
   except NoCredentialsError:
-      print("Credentials not available")
+    print("Credentials not available")
 
   except Exception as e:
-      print("There was an error: " + e)
+    print("There was an error:")
+    print(e)
   
   return False
 
