@@ -16,4 +16,5 @@ MONTH_MAP = {
 CONTENT_TYPES = {
   'image': 'image/jpeg',
   'video': 'video/mp4',
+  'audio': 'audio/mpeg',
 }

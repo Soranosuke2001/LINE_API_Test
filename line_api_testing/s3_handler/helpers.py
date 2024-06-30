@@ -17,11 +17,15 @@ AWS_REGION = os.getenv("AWS_REGION", None)
 
 
 # Upload object to s3
-def s3_upload(s3, body, object_name, file_type):
+def s3_upload(s3, body, object_name, file_type, content_type=None):
   try:
-      s3.put_object(Bucket=BUCKET_NAME, Key=object_name, Body=body, ContentType=CONTENT_TYPES[file_type])
-      print(f"{object_name} has been uploaded to {BUCKET_NAME}")
-      return True
+    if content_type:
+        s3.put_object(Bucket=BUCKET_NAME, Key=object_name, Body=body, ContentType=content_type)
+    else: 
+        s3.put_object(Bucket=BUCKET_NAME, Key=object_name, Body=body, ContentType=CONTENT_TYPES[file_type])
+        
+    print(f"{object_name} has been uploaded to {BUCKET_NAME}")
+    return True
 
   except FileNotFoundError:
       print("The file was not found")

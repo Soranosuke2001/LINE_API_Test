@@ -25,9 +25,6 @@ from .helpers import (
   s3_upload
 )
 
-# AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY", None)
-# AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", None)
-
 s3 = boto3.client('s3')
 
 
@@ -110,6 +107,84 @@ class S3VideoUploadEvent(APIView):
   
   
   def delete(self, request, *args, **kwargs):
-    S3LineImage.objects.all().delete()
+    S3LineVideo.objects.all().delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+# Create your views here.
+class S3AudioUploadEvent(APIView):
+  def get(self, request, format=None):
+    s3_audios = S3LineAudio.objects.all()
+
+    serializer = S3LineAudioSerializer(s3_audios, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+  def post(self, request, format=None):
+    filtered_data, audio_id, object_path = construct_filtered_data(request.data, 'audio')
+
+    # save the image details to the model
+    serializer = S3LineAudioSerializer(data=filtered_data)
+
+    if not serializer.is_valid():
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    serializer.save()
+
+    # fetch the image from line data api
+    response = fetch_binary_data(audio_id)
+
+    if not response:
+      return Response(status=status.HTTP_401_UNAUTHORIZED)
+    
+    # upload the image to the s3 bucket
+    s3_upload_state = s3_upload(s3, response.content, object_path, 'audio')
+
+    if not s3_upload_state:
+      return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    return Response(status=status.HTTP_200_OK)
+  
+  
+  def delete(self, request, *args, **kwargs):
+    S3LineAudio.objects.all().delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+# Create your views here.
+class S3FileUploadEvent(APIView):
+  def get(self, request, format=None):
+    s3_videos = S3LineFile.objects.all()
+
+    serializer = S3LineFileSerializer(s3_videos, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+  def post(self, request, format=None):
+    filtered_data, file_id, object_path = construct_filtered_data(request.data, 'file')
+
+    # save the image details to the model
+    serializer = S3LineFileSerializer(data=filtered_data)
+
+    if not serializer.is_valid():
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    serializer.save()
+
+    # fetch the image from line data api
+    response = fetch_binary_data(file_id)
+
+    if not response:
+      return Response(status=status.HTTP_401_UNAUTHORIZED)
+    
+    # upload the image to the s3 bucket
+    s3_upload_state = s3_upload(s3, response.content, object_path, response.headers.get('Content-Type'))
+
+    if not s3_upload_state:
+      return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    return Response(status=status.HTTP_200_OK)
+  
+  
+  def delete(self, request, *args, **kwargs):
+    S3LineFile.objects.all().delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
