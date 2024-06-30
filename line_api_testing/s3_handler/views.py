@@ -176,7 +176,7 @@ class S3FileUploadEvent(APIView):
       return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     # upload the image to the s3 bucket
-    s3_upload_state = s3_upload(s3, response.content, object_path, response.headers.get('Content-Type'))
+    s3_upload_state = s3_upload(s3, response.content, object_path, 'file', response.headers.get('Content-Type'))
 
     if not s3_upload_state:
       return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)

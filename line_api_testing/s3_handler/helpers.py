@@ -2,7 +2,6 @@ import os
 import requests
 from datetime import datetime
 
-import ffmpeg
 from PIL import Image
 from io import BytesIO
 
