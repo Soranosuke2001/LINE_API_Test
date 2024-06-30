@@ -146,4 +146,3 @@ def construct_file_data(data):
     "timestamp": dt_obj,
   }
 
-
