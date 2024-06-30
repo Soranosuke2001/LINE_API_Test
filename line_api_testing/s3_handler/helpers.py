@@ -82,8 +82,10 @@ def construct_filtered_data(data):
     url = f'https://{BUCKET_NAME}.s3.{AWS_REGION}.amazonaws.com/{object_path}'
 
     return {
-        f'{data['message']['type']}_id': id,
-        f'{data['message']['type']}_url': url,
+        # f'{data['message']['type']}_id': id,
+        # f'{data['message']['type']}_url': url,
+        f'image_id': id,
+        f'image_url': url,
         "user_id": user_id,
         "timestamp": timestamp,
     }, id, object_path
