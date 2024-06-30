@@ -102,8 +102,6 @@ class LineVideoEvent(APIView):
   def post(self, request, format=None):
     filtered_data = helpers.construct_video_data(request.data)
 
-    print(f'Here is the filtered data: {filtered_data}')
-
     serializer = LineVideoSerializer(data=filtered_data)
 
     if serializer.is_valid():
@@ -115,17 +113,11 @@ class LineVideoEvent(APIView):
       if not url:
         return Response(status=status.HTTP_404_NOT_FOUND)
       
-      print(f'Sending post request to: {url}')
-      print()
+      response = helpers.forward_request(reverse(url), filtered_data)
 
-      return Response(status=status.HTTP_200_OK)
+      if response.status_code == 200:
+        return Response(status=status.HTTP_200_OK)
 
-      # response = helpers.forward_request(reverse(url), filtered_data)
-
-      # if response.status_code == 200:
-      #   return Response(status=status.HTTP_200_OK)
-
-    print("The serializer was not valid")
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -157,14 +149,10 @@ class LineAudioEvent(APIView):
       if not url:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-      print(f'Sending post request to: {url}')
-      print()
+      response = helpers.forward_request(reverse(url), filtered_data)
 
-      return Response(status=status.HTTP_200_OK)
-      # response = helpers.forward_request(reverse(url), filtered_data)
-
-      # if response.status_code == 200:
-      #   return Response(status=status.HTTP_200_OK)
+      if response.status_code == 200:
+        return Response(status=status.HTTP_200_OK)
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -197,15 +185,10 @@ class LineFileEvent(APIView):
       if not url:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-      print(f'Sending post request to: {url}')
-      print()
+      response = helpers.forward_request(reverse(url), filtered_data)
 
-      return Response(status=status.HTTP_200_OK)
-
-      # response = helpers.forward_request(reverse(url), filtered_data)
-
-      # if response.status_code == 200:
-      #   return Response(status=status.HTTP_200_OK)
+      if response.status_code == 200:
+        return Response(status=status.HTTP_200_OK)
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
