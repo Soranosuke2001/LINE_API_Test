@@ -72,7 +72,10 @@ def fetch_binary_data(id):
 
 # Created filtered data object
 def construct_filtered_data(data):
-    id = data['message']['id']
+    print(data)
+    print()
+    id = '1'
+    # id = data['message']['id']
     user_id = data['user_id']
     timestamp, month_taken = get_month(data['timestamp'])
     object_path = f'{user_id}/{month_taken}/{id}'
