@@ -125,9 +125,6 @@ def construct_audio_data(data):
 
 # Create filtered data object (file endpoint)
 def construct_file_data(data):
-  print(data)
-  print()
-  
   content_provider = data['message']['contentProvider']['type']
   dt_obj = convert_timestamp(data['timestamp'])
 
@@ -136,8 +133,8 @@ def construct_file_data(data):
   else:
     file_url = data['message']['contentProvider']['originalContentUrl']
 
-  if data['message']['filename']:
-    filename = data['message']['filename']
+  if data['message']['fileName']:
+    filename = data['message']['fileName']
   else:
     filename = ''
 
