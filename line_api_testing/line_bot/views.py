@@ -32,8 +32,7 @@ class WebhookEvent(APIView):
     if not verified:
       return Response(status=status.HTTP_401_UNAUTHORIZED)
     
-    data = request.data
-    events = data['events']
+    events = request.data['events']
 
     for event in events:
       url = helpers.construct_url('line', event)
@@ -59,25 +58,7 @@ class LineImageEvent(APIView):
 
 
   def post(self, request, format=None):
-    data = request.data
-    content_provider = data['message']['contentProvider']['type']
-    dt_obj = helpers.convert_timestamp(data['timestamp'])
-
-    if content_provider == 'line':
-      image_url = data['message']['id']
-    else:
-      image_url = data['message']['contentProvider']['originalContentUrl']
-
-    filtered_data = {
-      "image_url": image_url,
-      "content_provider": content_provider,
-      "source_type": data['source']['type'],
-      "reply_token": data['replyToken'],
-      "is_redelivery": data['deliveryContext']['isRedelivery'],
-      "user_id": data['source']['userId'],
-      "webhook_event_id": data['webhookEventId'],
-      "timestamp": dt_obj,
-    }
+    filtered_data = helpers.construct_image_data(request.data)
 
     serializer = LineImageSerializer(data=filtered_data)
 
@@ -85,7 +66,7 @@ class LineImageEvent(APIView):
       serializer.save()
 
       # send post request to s3_handler app
-      url = helpers.construct_url('s3', data['message']['type'])
+      url = helpers.construct_url('s3', request.data['message']['type'])
 
       if not url:
         return Response(status=status.HTTP_404_NOT_FOUND)
