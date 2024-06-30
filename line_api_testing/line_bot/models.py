@@ -61,7 +61,7 @@ class LineAudio(models.Model):
 class LineFile(models.Model):
   file_url = models.CharField(max_length=256)
   filename = models.CharField(max_length=100)
-  filesize = models.IntegerField()
+  filesize_bytes = models.IntegerField()
 
   content_provider = models.CharField(max_length=10)
   source_type = models.CharField(max_length=10)
