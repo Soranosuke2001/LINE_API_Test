@@ -141,7 +141,7 @@ def construct_file_data(data):
   return {
     "file_url": file_url,
     "filename": filename,
-    "filesize_bytes": data['message']['filesize'],
+    "filesize_bytes": data['message']['fileSize'],
     "content_provider": content_provider,
     "source_type": data['source']['type'],
     "reply_token": data['replyToken'],
